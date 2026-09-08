@@ -28,12 +28,10 @@ export async function login(formData: FormData): Promise<LoginResult> {
     password: parsed.data.password,
   });
 
-  if (error) {
-    // Deliberately generic — same message whether the email doesn't exist
-    // or the password is wrong. Same enumeration-prevention logic as the
-    // guest booking lookup in Part 2.
-    return { success: false, error: "Invalid email or password." };
-  }
+    if (error) {
+    console.error("SUPABASE AUTH ERROR:", error.message, error.status); // TEMP DEBUG
+    return { success: false, error: error.message }; // TEMP: showing real error
+    }
 
   redirect("/admin");
 }
