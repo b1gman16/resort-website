@@ -18,6 +18,7 @@ export async function getRooms(): Promise<RoomWithImages[]> {
   const { data, error } = await supabase
     .from("rooms")
     .select("*, room_images(*)")
+    .eq("is_active", true)
     .order("base_price", { ascending: true });
 
   if (error) {
@@ -40,6 +41,7 @@ export async function getRoomBySlug(slug: string): Promise<RoomWithImages | null
     .from("rooms")
     .select("*, room_images(*)")
     .eq("slug", slug)
+    .eq("is_active", true)
     .maybeSingle(); // maybeSingle (not single) returns null instead of throwing on 0 rows
 
   if (error) {

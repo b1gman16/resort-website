@@ -227,6 +227,7 @@ export type Database = {
           created_at: string
           description: string
           id: string
+          is_active: boolean
           name: string
           slug: string
           total_units: number
@@ -238,6 +239,7 @@ export type Database = {
           created_at?: string
           description: string
           id?: string
+          is_active?: boolean
           name: string
           slug: string
           total_units?: number
@@ -249,6 +251,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
+          is_active?: boolean
           name?: string
           slug?: string
           total_units?: number
