@@ -1,6 +1,8 @@
 import { getBookingStats } from "@/lib/queries/admin-bookings";
+import { getUnreadMessageCount } from "@/lib/queries/admin-messages";
 
 export default async function AdminDashboardPage() {
+  const unreadMessages = await getUnreadMessageCount();
   const stats = await getBookingStats();
 
   const cards = [
@@ -8,6 +10,7 @@ export default async function AdminDashboardPage() {
     { label: "Confirmed", value: stats.confirmed, color: "text-green-600" },
     { label: "Completed", value: stats.completed, color: "text-blue-600" },
     { label: "Cancelled", value: stats.cancelled, color: "text-slate-500" },
+    { label: "Unread Messages", value: unreadMessages, color: "text-amber-600" },
   ];
 
   return (

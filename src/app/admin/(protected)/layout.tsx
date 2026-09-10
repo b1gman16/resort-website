@@ -32,6 +32,7 @@ export default async function AdminLayout({
           <Link href="/admin">Dashboard</Link>
           <Link href="/admin/bookings">Bookings</Link>
           <Link href="/admin/rooms">Rooms</Link>
+          <Link href="/admin/messages">Messages</Link>
         </div>
         <span className="text-sm text-slate-500">{user.email}</span>
       </nav>
