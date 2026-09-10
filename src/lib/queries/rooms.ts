@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/database.types";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 // Re-exporting the generated row type keeps components from having to
 // reach into Database["public"]["Tables"]["rooms"]["Row"] directly.
@@ -76,18 +77,24 @@ export async function getRoomById(id: string): Promise<Room | null> {
 // to be rejected at the end.
 export async function isRoomAvailable(
   roomId: string,
-  checkIn: string, // ISO date string, e.g. "2026-10-01"
+  checkIn: string,
   checkOut: string
 ): Promise<boolean> {
-  const supabase = await createClient();
+  // Uses the admin client, not the regular server client — bookings has no
+  // public RLS SELECT policy (see Part 1), so a guest-context query here
+  // would silently return zero rows and always report "available,"
+  // regardless of real conflicts. This is a narrow, deliberate exception:
+  // we only ever return a boolean to the caller, never actual booking
+  // rows/guest data, so bypassing RLS here doesn't leak anything.
+  const supabase = createAdminClient();
 
   const { data, error } = await supabase
     .from("bookings")
     .select("id")
     .eq("room_id", roomId)
     .eq("status", "confirmed")
-    .lt("check_in", checkOut)   // existing booking starts before new one ends
-    .gt("check_out", checkIn)   // existing booking ends after new one starts
+    .lt("check_in", checkOut)
+    .gt("check_out", checkIn)
     .limit(1);
 
   if (error) {
