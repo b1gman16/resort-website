@@ -9,9 +9,6 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-// Dynamic <title>/<meta description> per room — meaningfully helps SEO for
-// a resort site, since "Ocean View Suite - [Resort Name]" ranking on its
-// own search terms is worth more than every page sharing one generic title.
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const room = await getRoomBySlug(slug);
@@ -30,9 +27,6 @@ export default async function RoomDetailPage({ params }: Props) {
   const { slug } = await params;
   const room = await getRoomBySlug(slug);
 
-  // Triggers Next.js's not-found boundary (app/not-found.tsx, or the
-  // default one) — the correct response for "this specific room doesn't
-  // exist," as opposed to throwing, which would imply a system error.
   if (!room) {
     notFound();
   }
@@ -62,7 +56,7 @@ export default async function RoomDetailPage({ params }: Props) {
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
-                priority={i === 0} // load the hero image eagerly, rest lazily
+                priority={i === 0}
               />
             </div>
           ))}
@@ -75,7 +69,14 @@ export default async function RoomDetailPage({ params }: Props) {
           <p className="text-slate-600 whitespace-pre-line">{room.description}</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 h-fit">
+        {/* sticky top-24: follows scroll, held ~96px below the sticky navbar
+            rather than pinned to the very top edge (which would sit flush
+            against the navbar with no breathing room). h-fit keeps its
+            height to its own content, not stretched to match the
+            description column. It naturally stops scrolling once it
+            reaches the bottom of this grid row — it can't float past the
+            end of the room's content into the footer. */}
+        <div className="bg-white rounded-lg shadow-sm p-6 h-fit sticky top-24 self-start">
           <p className="text-2xl font-semibold text-slate-900">
             ₱{room.base_price.toLocaleString()}
             <span className="text-sm font-normal text-slate-500"> / night</span>
