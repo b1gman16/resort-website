@@ -20,12 +20,22 @@ export function BookingForm({ room }: { room: Room }) {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
 
-  // Debounced availability check — runs automatically ~500ms after the
-  // guest finishes picking both dates, rather than requiring a separate
-  // "Check Availability" button click. This is a UX convenience only (see
-  // Part 2's comment on isRoomAvailable) — the guest can still submit even
-  // if this shows "unavailable," since v1 allows overlapping pending
-  // requests that staff resolve manually.
+  // Calculates nights and an estimated total purely for display —
+  // recalculated on every render from checkIn/checkOut, no extra state
+  // needed since it's a pure derivation, not something that needs to
+  // persist or trigger its own effects.
+  const nights =
+    checkIn && checkOut
+      ? Math.max(
+          0,
+          Math.ceil(
+            (new Date(checkOut).getTime() - new Date(checkIn).getTime()) /
+              (1000 * 60 * 60 * 24)
+          )
+        )
+      : 0;
+  const estimatedTotal = nights * room.base_price;
+
   useEffect(() => {
     if (!checkIn || !checkOut) {
       setAvailability("idle");
@@ -56,11 +66,6 @@ export function BookingForm({ room }: { room: Room }) {
       specialRequests: formData.get("specialRequests"),
     };
 
-    // Client-side validation first — catches obvious issues (empty
-    // required fields, malformed email) before even hitting the network.
-    // The Server Action re-validates the same schema regardless (Part 2),
-    // so this is purely a faster feedback loop, not the actual security
-    // boundary.
     const parsed = createBookingSchema.safeParse(raw);
     if (!parsed.success) {
       setFieldErrors(parsed.error.flatten().fieldErrors);
@@ -77,10 +82,6 @@ export function BookingForm({ room }: { room: Room }) {
         return;
       }
 
-      // Success — hand off to the confirmation page with the reference.
-      // Not passing guest email in the URL on purpose (would leak it into
-      // browser history / shared links) — the confirmation page only
-      // needs the reference to display it back to the guest.
       router.push(`/confirmation?ref=${result.bookingReference}`);
     });
   }
@@ -115,6 +116,17 @@ export function BookingForm({ room }: { room: Room }) {
       </div>
 
       <AvailabilityBadge status={availability} />
+
+      {nights > 0 && (
+        <div className="bg-slate-50 rounded px-4 py-3 flex items-center justify-between text-sm">
+          <span className="text-slate-600">
+            ₱{room.base_price.toLocaleString()} × {nights} night{nights !== 1 ? "s" : ""}
+          </span>
+          <span className="font-semibold text-slate-900">
+            Est. ₱{estimatedTotal.toLocaleString()}
+          </span>
+        </div>
+      )}
 
       <Field label="Guests" error={fieldErrors.guestsCount}>
         <input
@@ -201,8 +213,6 @@ function AvailabilityBadge({ status }: { status: AvailabilityStatus }) {
   const text: Record<Exclude<AvailabilityStatus, "idle">, string> = {
     checking: "Checking availability...",
     available: "✓ These dates are available.",
-    // Deliberately not blocking — see the useEffect comment above for why
-    // this is a heads-up, not a hard stop.
     unavailable:
       "This room already has a confirmed booking for part of this range — you can still submit, but there's a chance it won't be confirmed.",
   };

@@ -39,10 +39,6 @@ export async function lookupBooking(
        total_price, currency, special_requests,
        room:rooms(name, slug)`
     )
-    // BOTH conditions must match — this is the actual security boundary.
-    // Reference alone isn't enough (it's short and could theoretically be
-    // guessed/brute-forced); pairing it with the email the guest provided
-    // at booking time is what makes this safe to expose without accounts.
     .eq("booking_reference", parsed.data.bookingReference)
     .eq("guest_email", parsed.data.guestEmail)
     .maybeSingle();
@@ -53,14 +49,40 @@ export async function lookupBooking(
   }
 
   if (!data) {
-    // Deliberately vague — same message whether the reference doesn't
-    // exist OR the email doesn't match. Being specific ("wrong email" vs
-    // "reference not found") would let someone enumerate valid booking
-    // references by trial and error.
     return { success: false, error: "No booking found with that reference and email." };
   }
 
   return { success: true, booking: data as unknown as BookingDetails };
+}
+
+// Fetches a booking by reference alone, no email required — unlike
+// lookupBooking (used by /manage), which deliberately requires both as a
+// security boundary for guests returning later. This one is only ever
+// reached via the redirect immediately after a guest creates their own
+// booking (see the booking form's router.push), so the reference alone is
+// sufficient here — same trust level as, e.g., a Stripe checkout success
+// page showing an order summary right after payment.
+export async function getBookingByReference(
+  bookingReference: string
+): Promise<BookingDetails | null> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase
+    .from("bookings")
+    .select(
+      `booking_reference, status, check_in, check_out, guests_count,
+       total_price, currency, special_requests,
+       room:rooms(name, slug)`
+    )
+    .eq("booking_reference", bookingReference)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Booking fetch by reference failed:", error);
+    return null;
+  }
+
+  return data as unknown as BookingDetails | null;
 }
 
 export type CancelBookingResult = { success: true } | { success: false; error: string };
@@ -71,15 +93,12 @@ export async function cancelBooking(
 ): Promise<CancelBookingResult> {
   const supabase = createAdminClient();
 
-  // Re-verify ownership with the same two-factor check before allowing
-  // the cancellation — never trust that a prior lookup happened in the
-  // same session; this function has to be safe to call on its own.
   const { data, error } = await supabase
     .from("bookings")
     .update({ status: "cancelled", cancelled_at: new Date().toISOString() })
     .eq("booking_reference", bookingReference)
     .eq("guest_email", guestEmail)
-    .in("status", ["pending", "confirmed"]) // can't cancel an already-cancelled/completed booking
+    .in("status", ["pending", "confirmed"])
     .select("id")
     .maybeSingle();
 
