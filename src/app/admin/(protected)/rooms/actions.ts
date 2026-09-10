@@ -19,19 +19,20 @@ export async function createRoom(input: RoomInput): Promise<RoomActionResult> {
     };
   }
 
-  // Regular authenticated client, not admin — the "Staff can manage rooms"
-  // RLS policy from Part 1 already grants this, same reasoning as every
-  // other authenticated-staff-context query in this project.
   const supabase = await createClient();
 
-  const { error } = await supabase.from("rooms").insert({
-    name: parsed.data.name,
-    slug: parsed.data.slug,
-    description: parsed.data.description,
-    base_price: parsed.data.basePrice,
-    capacity: parsed.data.capacity,
-    total_units: parsed.data.totalUnits,
-  });
+  const { data, error } = await supabase
+    .from("rooms")
+    .insert({
+      name: parsed.data.name,
+      slug: parsed.data.slug,
+      description: parsed.data.description,
+      base_price: parsed.data.basePrice,
+      capacity: parsed.data.capacity,
+      total_units: parsed.data.totalUnits,
+    })
+    .select("id")
+    .single();
 
   if (error) {
     if (error.code === "23505") {
@@ -47,7 +48,7 @@ export async function createRoom(input: RoomInput): Promise<RoomActionResult> {
 
   revalidatePath("/admin/rooms");
   revalidatePath("/rooms");
-  redirect("/admin/rooms");
+  redirect(`/admin/rooms/${data.id}/edit`);
 }
 
 export async function updateRoom(roomId: string, input: RoomInput): Promise<RoomActionResult> {
@@ -86,11 +87,6 @@ export async function updateRoom(roomId: string, input: RoomInput): Promise<Room
     return { success: false, error: "Something went wrong updating the room." };
   }
 
-  // NOTE: intentionally NOT changing base_price on any already-created
-  // bookings — this is exactly why Part 1 snapshots price_per_night and
-  // total_price at booking time. A price change here only affects future
-  // bookings, never past ones. Worth remembering why, if it's ever tempting
-  // to "fix" a past booking's total after a price correction — don't.
   revalidatePath("/admin/rooms");
   revalidatePath("/rooms");
   revalidatePath(`/rooms/${parsed.data.slug}`);
