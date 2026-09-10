@@ -4,41 +4,38 @@ import type { RoomWithImages } from "@/lib/queries/rooms";
 import { getRoomImageUrl } from "@/lib/utils/storage";
 
 export function RoomCard({ room }: { room: RoomWithImages }) {
-  // Rooms may not have an image yet (e.g. newly added, or Storage setup
-  // pending) — fall back to a plain placeholder block instead of letting
-  // a broken image icon show, which looks unfinished/broken to a visitor.
   const primaryImage = room.room_images[0];
   const imageUrl = primaryImage ? getRoomImageUrl(primaryImage.storage_path) : null;
 
   return (
-    <Link
-      href={`/rooms/${room.slug}`}
-      className="block bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-    >
-      <div className="relative aspect-[4/3] bg-slate-200">
+    <Link href={`/rooms/${room.slug}`} className="group block">
+      <div className="relative aspect-[4/3] bg-[var(--color-sand)] overflow-hidden">
         {imageUrl ? (
           <Image
             src={imageUrl}
             alt={primaryImage?.alt_text ?? room.name}
             fill
-            className="object-cover"
+            className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">
-            No image yet
+          <div className="w-full h-full flex items-center justify-center text-[var(--color-ink)]/40 text-sm">
+            Photo coming soon
           </div>
         )}
       </div>
-      <div className="p-4">
-        <h3 className="font-semibold text-slate-900">{room.name}</h3>
-        <p className="text-sm text-slate-500 mt-1 line-clamp-2">{room.description}</p>
-        <div className="mt-3 flex items-center justify-between">
-          <span className="text-lg font-semibold text-slate-900">
-            ₱{room.base_price.toLocaleString()}
-            <span className="text-sm font-normal text-slate-500"> / night</span>
+      <div className="pt-4">
+        <h3 className="font-[family-name:var(--font-display)] text-lg text-[var(--color-tide)]">
+          {room.name}
+        </h3>
+        <p className="text-sm text-[var(--color-ink)]/70 mt-1 line-clamp-2">
+          {room.description}
+        </p>
+        <div className="mt-3 flex items-center justify-between text-sm">
+          <span className="text-[var(--color-brass)] font-medium">
+            ₱{room.base_price.toLocaleString()} / night
           </span>
-          <span className="text-xs text-slate-500">Up to {room.capacity} guests</span>
+          <span className="text-[var(--color-ink)]/50">Up to {room.capacity} guests</span>
         </div>
       </div>
     </Link>

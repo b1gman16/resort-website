@@ -5,37 +5,40 @@ import { siteConfig } from "@/config/site";
 
 export default async function HomePage() {
   const rooms = await getRooms();
-  const featuredRooms = rooms.slice(0, 3); // top 3 by price, per getRooms' ordering
+  const featuredRooms = rooms.slice(0, 3);
 
   return (
     <div>
-      {/* Hero */}
-      <section className="bg-slate-900 text-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 text-center">
-          <h1 className="text-4xl md:text-5xl font-semibold">{siteConfig.name}</h1>
-          <p className="text-slate-300 mt-4 max-w-xl mx-auto">{siteConfig.description}</p>
+      <section className="bg-[var(--color-tide)] text-[var(--color-foam)]">
+        <div className="max-w-6xl mx-auto px-6 py-28 md:py-36">
+          <p className="text-[var(--color-brass)] text-sm mb-4">{siteConfig.contact.address}</p>
+          <h1 className="font-[family-name:var(--font-display)] text-5xl md:text-6xl leading-[1.05] max-w-2xl">
+            Slow mornings, ocean air, and nowhere to be.
+          </h1>
+          <p className="mt-6 text-lg opacity-80 max-w-md">{siteConfig.description}</p>
           <Link
             href="/rooms"
-            className="inline-block mt-8 bg-white text-slate-900 px-6 py-3 rounded font-medium hover:bg-slate-100"
+            className="inline-block mt-10 bg-[var(--color-foam)] text-[var(--color-tide)] px-7 py-3.5 rounded-sm font-medium hover:bg-[var(--color-sand)] transition-colors"
           >
             View Rooms
           </Link>
         </div>
       </section>
 
-      {/* Featured rooms */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-semibold text-slate-900">Featured Rooms</h2>
-          <Link href="/rooms" className="text-sm text-slate-600 hover:underline">
-            View all →
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <div className="flex items-end justify-between mb-10">
+          <h2 className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-tide)]">
+            Where to stay
+          </h2>
+          <Link href="/rooms" className="text-sm text-[var(--color-tide)] hover:underline">
+            View all
           </Link>
         </div>
 
         {featuredRooms.length === 0 ? (
-          <p className="text-slate-500">Rooms coming soon.</p>
+          <p className="text-[var(--color-ink)]/60">Rooms coming soon.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {featuredRooms.map((room) => (
               <RoomCard key={room.id} room={room} />
             ))}
@@ -43,20 +46,31 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* Simple value props strip — replace with real amenities once /amenities exists */}
-      <section className="bg-slate-50 py-16">
-        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <section className="bg-[var(--color-sand)] py-20">
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>
-            <p className="font-semibold text-slate-900">Beachfront Location</p>
-            <p className="text-sm text-slate-500 mt-1">Steps from the water, every room.</p>
+            <p className="font-[family-name:var(--font-display)] text-xl text-[var(--color-tide)]">
+              Beachfront, every room
+            </p>
+            <p className="text-sm text-[var(--color-ink)]/70 mt-2">
+              No room here is more than a two-minute walk from the water.
+            </p>
           </div>
           <div>
-            <p className="font-semibold text-slate-900">Book Now, Pay Later</p>
-            <p className="text-sm text-slate-500 mt-1">No payment required to reserve.</p>
+            <p className="font-[family-name:var(--font-display)] text-xl text-[var(--color-tide)]">
+              Book now, pay later
+            </p>
+            <p className="text-sm text-[var(--color-ink)]/70 mt-2">
+              Reserve online, settle the bill when you arrive.
+            </p>
           </div>
           <div>
-            <p className="font-semibold text-slate-900">Flexible Cancellation</p>
-            <p className="text-sm text-slate-500 mt-1">Manage or cancel anytime online.</p>
+            <p className="font-[family-name:var(--font-display)] text-xl text-[var(--color-tide)]">
+              Change your mind anytime
+            </p>
+            <p className="text-sm text-[var(--color-ink)]/70 mt-2">
+              Manage or cancel your booking yourself, no calls needed.
+            </p>
           </div>
         </div>
       </section>
