@@ -2,9 +2,6 @@ import { getAllBookings } from "@/lib/queries/admin-bookings";
 import { confirmBooking, cancelBookingAsStaff, markCompleted } from "./actions";
 import { BookingRow } from "@/components/admin/booking-row";
 
-// Server Component — fetches fresh on every request. For an admin dashboard
-// viewed by a handful of staff, this is simpler and safer (always current
-// data) than adding caching complexity we don't need yet.
 export default async function AdminBookingsPage() {
   const bookings = await getAllBookings();
 
@@ -20,6 +17,7 @@ export default async function AdminBookingsPage() {
               <th className="px-4 py-2">Guest</th>
               <th className="px-4 py-2">Room</th>
               <th className="px-4 py-2">Dates</th>
+              <th className="px-4 py-2">Total</th>
               <th className="px-4 py-2">Status</th>
               <th className="px-4 py-2">Actions</th>
             </tr>

@@ -30,9 +30,6 @@ export function BookingRow({
     setError(null);
     startTransition(async () => {
       const result = await action(booking.id);
-      // This is exactly where the 23P01 message from actions.ts surfaces
-      // to the person who needs to see it — a staff member deciding
-      // whether to confirm a booking.
       if (!result.success) {
         setError(result.error);
       }
@@ -49,6 +46,9 @@ export function BookingRow({
       <td className="px-4 py-3">{booking.room?.name ?? "—"}</td>
       <td className="px-4 py-3 text-xs">
         {booking.check_in} → {booking.check_out}
+      </td>
+      <td className="px-4 py-3 font-medium">
+        {booking.currency} {booking.total_price.toLocaleString()}
       </td>
       <td className="px-4 py-3">
         <span
