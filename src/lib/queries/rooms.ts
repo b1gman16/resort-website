@@ -48,6 +48,26 @@ export async function getRoomBySlug(slug: string): Promise<RoomWithImages | null
   return data;
 }
 
+// Fetches a single room by its UUID — used by the booking form, which
+// receives ?room=<id> from the "Book This Room" link rather than a slug.
+// Same null-not-throw reasoning as getRoomBySlug: a bad/stale room ID in
+// the URL is a normal case to handle gracefully, not a system error.
+export async function getRoomById(id: string): Promise<Room | null> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("rooms")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to fetch room: ${error.message}`);
+  }
+
+  return data;
+}
+
 // Checks whether a room has any CONFIRMED booking overlapping the given
 // date range. Used by the booking form to show real-time availability
 // before the guest submits — this is a UX convenience check, NOT the
