@@ -13,13 +13,17 @@ export default async function EditRoomPage({ params }: Props) {
     notFound();
   }
 
+  // bind() creates a new function with `id` pre-filled as the first
+  // argument — but critically, Next.js recognizes bound Server Actions
+  // specifically and knows how to serialize them across the Server →
+  // Client boundary. A plain arrow function wrapping the same call does
+  // NOT get this special handling, which is exactly what broke here.
+  const updateRoomWithId = updateRoom.bind(null, id);
+
   return (
     <div>
       <h1 className="text-2xl font-semibold text-slate-900 mb-6">Edit {room.name}</h1>
-      <RoomForm
-        initialRoom={room}
-        onSubmit={(data) => updateRoom(id, data)}
-      />
+      <RoomForm initialRoom={room} onSubmit={updateRoomWithId} />
     </div>
   );
 }
