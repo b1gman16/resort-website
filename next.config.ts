@@ -5,10 +5,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "fqoeudiluxvbodnmsczt.supabase.co", // your project ref
+        hostname: "fqoeudiluxvbodnmsczt.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },
     ],
+    dangerouslyAllowLocalIP: true, // ADD THIS LINE — see explanation above
   },
 };
 
