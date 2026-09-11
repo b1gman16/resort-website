@@ -12,6 +12,6 @@ export const siteConfig = {
   contact: {
     email: "hello@bayfrontresort.example",
     phone: "+63 900 000 0000",
-    address: "Cebu, Philippines",
+    address: "Dipaculao, Aurora, Philippines",
   },
 } as const;
