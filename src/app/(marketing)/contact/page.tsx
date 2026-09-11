@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { contactFormSchema } from "@/lib/validations/booking";
 import { submitContactForm } from "./actions";
 import { siteConfig } from "@/config/site";
+import { MapEmbed } from "@/components/contact/map-embed";
 
 export default function ContactPage() {
   const [isPending, startTransition] = useTransition();
@@ -103,6 +104,11 @@ export default function ContactPage() {
         <p>Or reach us directly:</p>
         <p>{siteConfig.contact.email}</p>
         <p>{siteConfig.contact.phone}</p>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-sm font-medium text-slate-700 mb-2">Find us</h2>
+        <MapEmbed address={siteConfig.contact.address} />
       </div>
     </div>
   );

@@ -1,17 +1,28 @@
 import Link from "next/link";
+
 import { siteConfig } from "@/config/site";
 
 export function Footer() {
+  const mapsUrl =
+    "https://www.google.com/maps?q=" +
+    encodeURIComponent(siteConfig.contact.address);
+
   return (
     <footer className="bg-[var(--color-tide)] text-[var(--color-foam)] mt-24">
       <div className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-10">
         <div>
-          <p className="font-[family-name:var(--font-display)] text-xl">{siteConfig.name}</p>
-          <p className="text-sm mt-3 opacity-75 max-w-xs">{siteConfig.description}</p>
+          <p className="font-[family-name:var(--font-display)] text-xl">
+            {siteConfig.name}
+          </p>
+
+          <p className="text-sm mt-3 opacity-75 max-w-xs">
+            {siteConfig.description}
+          </p>
         </div>
 
         <div>
           <p className="text-sm font-medium mb-3">Explore</p>
+
           <ul className="space-y-2 text-sm opacity-75">
             {siteConfig.nav.map((item) => (
               <li key={item.href}>
@@ -25,15 +36,33 @@ export function Footer() {
 
         <div>
           <p className="text-sm font-medium mb-3">Contact</p>
+
           <ul className="space-y-2 text-sm opacity-75">
-            <li>{siteConfig.contact.address}</li>
             <li>
-              <a href={`tel:${siteConfig.contact.phone}`} className="hover:opacity-100">
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-100 underline decoration-white/30 underline-offset-2"
+              >
+                {siteConfig.contact.address}
+              </a>
+            </li>
+
+            <li>
+              <a
+                href={"tel:" + siteConfig.contact.phone}
+                className="hover:opacity-100"
+              >
                 {siteConfig.contact.phone}
               </a>
             </li>
+
             <li>
-              <a href={`mailto:${siteConfig.contact.email}`} className="hover:opacity-100">
+              <a
+                href={"mailto:" + siteConfig.contact.email}
+                className="hover:opacity-100"
+              >
                 {siteConfig.contact.email}
               </a>
             </li>
