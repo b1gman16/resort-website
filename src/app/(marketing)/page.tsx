@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getRooms } from "@/lib/queries/rooms";
 import { RoomCard } from "@/components/rooms/room-card";
 import { siteConfig } from "@/config/site";
@@ -11,48 +12,72 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="bg-[var(--color-tide)] text-[var(--color-foam)]">
+      {/* Hero — now a full-bleed photo, not a flat color field.
+          relative + overflow-hidden gives the image, gradient, and
+          HeroReveal panel a shared coordinate space to stack in. */}
+      <section className="relative overflow-hidden">
         <HeroReveal>
-          <div className="max-w-6xl mx-auto px-6 py-28 md:py-36">
-            <p className="text-[var(--color-brass)] text-sm mb-4">{siteConfig.heroLocation}</p>
-            <h1 className="font-[family-name:var(--font-display)] text-5xl md:text-6xl leading-[1.05] max-w-2xl">
-              Slow mornings, ocean air, and nowhere to be.
-            </h1>
-            <p className="mt-6 text-lg opacity-80 max-w-md">{siteConfig.description}</p>
-            <Link
-              href="/rooms"
-              className="inline-block mt-10 bg-[var(--color-foam)] text-[var(--color-tide)] px-7 py-3.5 rounded-sm font-medium hover:bg-[var(--color-sand)] transition-colors"
-            >
-              View Rooms
-            </Link>
+          <div className="relative min-h-[85vh] flex items-end">
+            <Image
+              src="/images/hero.jpg"
+              alt="Ocean view at the resort"
+              fill
+              priority // this is the largest, first-visible image — load it eagerly, not lazily
+              className="object-cover"
+            />
+            {/* Gradient overlay: transparent at the top (lets the photo
+                breathe), solid Tide at the bottom (keeps the headline
+                legible against a busy photo, and gives the section a
+                color to hand off to the next one below). */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-tide)] via-[var(--color-tide)]/40 to-transparent" />
+
+            <div className="relative max-w-6xl mx-auto px-6 pb-32 md:pb-40 pt-40 text-[var(--color-foam)] w-full">
+              <p className="text-[var(--color-brass)] text-sm mb-4">{siteConfig.heroLocation}</p>
+              <h1 className="font-[family-name:var(--font-display)] text-5xl md:text-7xl leading-[1.02] max-w-2xl">
+                Slow mornings, ocean air, and nowhere to be.
+              </h1>
+              <p className="mt-6 text-lg opacity-90 max-w-md">{siteConfig.description}</p>
+              <Link
+                href="/rooms"
+                className="inline-block mt-10 bg-[var(--color-foam)] text-[var(--color-tide)] px-7 py-3.5 rounded-sm font-medium hover:bg-[var(--color-sand)] transition-colors"
+              >
+                View Rooms
+              </Link>
+            </div>
           </div>
         </HeroReveal>
       </section>
 
-      {/* everything below this point is unchanged */}
-      <section className="max-w-6xl mx-auto px-6 py-20">
+      {/* Featured rooms — pulled up with a negative margin so the card
+          grid's top edge overlaps the hero's bottom edge by ~96px.
+          relative z-10 lifts these cards visually above/in front of that
+          seam. shadow-lg (not just the existing hover shadow) makes the
+          overlap read clearly even before anyone hovers anything. */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 -mt-24 pb-20">
         <Reveal>
-          <div className="flex items-end justify-between mb-10">
-            <h2 className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-tide)]">
-              Where to stay
-            </h2>
-            <Link href="/rooms" className="text-sm text-[var(--color-tide)] hover:underline">
-              View all
-            </Link>
+          <div className="bg-[var(--color-foam)] rounded-lg shadow-xl p-8 md:p-12">
+            <div className="flex items-end justify-between mb-10">
+              <h2 className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-tide)]">
+                Where to stay
+              </h2>
+              <Link href="/rooms" className="text-sm text-[var(--color-tide)] hover:underline">
+                View all
+              </Link>
+            </div>
+
+            {featuredRooms.length === 0 ? (
+              <p className="text-[var(--color-ink)]/60">Rooms coming soon.</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                {featuredRooms.map((room, i) => (
+                  <Reveal key={room.id} delay={i * 0.1}>
+                    <RoomCard room={room} />
+                  </Reveal>
+                ))}
+              </div>
+            )}
           </div>
         </Reveal>
-
-        {featuredRooms.length === 0 ? (
-          <p className="text-[var(--color-ink)]/60">Rooms coming soon.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {featuredRooms.map((room, i) => (
-              <Reveal key={room.id} delay={i * 0.1}>
-                <RoomCard room={room} />
-              </Reveal>
-            ))}
-          </div>
-        )}
       </section>
 
       <section className="bg-[var(--color-sand)] py-20">
