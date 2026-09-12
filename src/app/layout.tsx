@@ -16,7 +16,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Azure Cove Resort",
+  title: "Bayfront Resort",
   description:
     "A quiet beachfront resort with ocean-view suites, garden villas, and private bungalows.",
 };
