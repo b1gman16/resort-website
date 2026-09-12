@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -25,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <ViewTransitions>
       <html lang="en" className={`${fraunces.variable} ${manrope.variable} h-full antialiased`}>
         <body className="min-h-full flex flex-col font-[family-name:var(--font-sans)] bg-[var(--color-foam)] text-[var(--color-ink)]">
-          {children}
+          <SmoothScroll>{children}</SmoothScroll>
         </body>
       </html>
     </ViewTransitions>
