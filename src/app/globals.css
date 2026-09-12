@@ -7,3 +7,23 @@
   --color-brass: #c9932b;
   --color-ink: #1a2422;
 }
+
+::view-transition-old(root) {
+  animation: 0.25s ease-out both fade-out-slide;
+}
+::view-transition-new(root) {
+  animation: 0.35s ease-out both fade-in-slide;
+}
+
+@keyframes fade-out-slide {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+@keyframes fade-in-slide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

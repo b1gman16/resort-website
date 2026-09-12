@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { getRooms } from "@/lib/queries/rooms";
 import { RoomCard } from "@/components/rooms/room-card";
 import { siteConfig } from "@/config/site";

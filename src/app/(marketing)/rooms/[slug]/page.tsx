@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { getRoomBySlug } from "@/lib/queries/rooms";
 import { getRoomImageUrl } from "@/lib/utils/storage";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 
 type Props = {
   params: Promise<{ slug: string }>;
