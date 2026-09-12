@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getRooms } from "@/lib/queries/rooms";
 import { RoomCard } from "@/components/rooms/room-card";
 import { siteConfig } from "@/config/site";
+import { Reveal } from "@/components/ui/reveal";
 
 export default async function HomePage() {
   const rooms = await getRooms();
@@ -26,21 +27,28 @@ export default async function HomePage() {
       </section>
 
       <section className="max-w-6xl mx-auto px-6 py-20">
-        <div className="flex items-end justify-between mb-10">
-          <h2 className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-tide)]">
-            Where to stay
-          </h2>
-          <Link href="/rooms" className="text-sm text-[var(--color-tide)] hover:underline">
-            View all
-          </Link>
-        </div>
+        <Reveal>
+          <div className="flex items-end justify-between mb-10">
+            <h2 className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-tide)]">
+              Where to stay
+            </h2>
+            <Link href="/rooms" className="text-sm text-[var(--color-tide)] hover:underline">
+              View all
+            </Link>
+          </div>
+        </Reveal>
 
         {featuredRooms.length === 0 ? (
           <p className="text-[var(--color-ink)]/60">Rooms coming soon.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {featuredRooms.map((room) => (
-              <RoomCard key={room.id} room={room} />
+            {featuredRooms.map((room, i) => (
+              // Staggered delay per card — each one reveals slightly after
+              // the previous, left to right, instead of all three popping
+              // in simultaneously.
+              <Reveal key={room.id} delay={i * 0.1}>
+                <RoomCard room={room} />
+              </Reveal>
             ))}
           </div>
         )}
@@ -48,30 +56,29 @@ export default async function HomePage() {
 
       <section className="bg-[var(--color-sand)] py-20">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
-          <div>
-            <p className="font-[family-name:var(--font-display)] text-xl text-[var(--color-tide)]">
-              Beachfront, every room
-            </p>
-            <p className="text-sm text-[var(--color-ink)]/70 mt-2">
-              No room here is more than a two-minute walk from the water.
-            </p>
-          </div>
-          <div>
-            <p className="font-[family-name:var(--font-display)] text-xl text-[var(--color-tide)]">
-              Book now, pay later
-            </p>
-            <p className="text-sm text-[var(--color-ink)]/70 mt-2">
-              Reserve online, settle the bill when you arrive.
-            </p>
-          </div>
-          <div>
-            <p className="font-[family-name:var(--font-display)] text-xl text-[var(--color-tide)]">
-              Change your mind anytime
-            </p>
-            <p className="text-sm text-[var(--color-ink)]/70 mt-2">
-              Manage or cancel your booking yourself, no calls needed.
-            </p>
-          </div>
+          {[
+            {
+              title: "Beachfront, every room",
+              body: "No room here is more than a two-minute walk from the water.",
+            },
+            {
+              title: "Book now, pay later",
+              body: "Reserve online, settle the bill when you arrive.",
+            },
+            {
+              title: "Change your mind anytime",
+              body: "Manage or cancel your booking yourself, no calls needed.",
+            },
+          ].map((item, i) => (
+            <Reveal key={item.title} delay={i * 0.1}>
+              <div>
+                <p className="font-[family-name:var(--font-display)] text-xl text-[var(--color-tide)]">
+                  {item.title}
+                </p>
+                <p className="text-sm text-[var(--color-ink)]/70 mt-2">{item.body}</p>
+              </div>
+            </Reveal>
+          ))}
         </div>
       </section>
     </div>

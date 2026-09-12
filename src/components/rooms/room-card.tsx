@@ -8,14 +8,20 @@ export function RoomCard({ room }: { room: RoomWithImages }) {
   const imageUrl = primaryImage ? getRoomImageUrl(primaryImage.storage_path) : null;
 
   return (
-    <Link href={`/rooms/${room.slug}`} className="group block">
-      <div className="relative aspect-[4/3] bg-[var(--color-sand)] overflow-hidden">
+    <Link
+      href={`/rooms/${room.slug}`}
+      // group: lets children (image, shadow) react to hover on this
+      // outer element, not just their own individual hover state.
+      // -translate-y-1.5: the whole card lifts slightly on hover.
+      className="group block transition-transform duration-300 hover:-translate-y-1.5"
+    >
+      <div className="relative aspect-[4/3] bg-[var(--color-sand)] overflow-hidden rounded-sm shadow-sm group-hover:shadow-xl transition-shadow duration-300">
         {imageUrl ? (
           <Image
             src={imageUrl}
             alt={primaryImage?.alt_text ?? room.name}
             fill
-            className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+            className="object-cover group-hover:scale-[1.05] transition-transform duration-500"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
         ) : (
@@ -25,7 +31,7 @@ export function RoomCard({ room }: { room: RoomWithImages }) {
         )}
       </div>
       <div className="pt-4">
-        <h3 className="font-[family-name:var(--font-display)] text-lg text-[var(--color-tide)]">
+        <h3 className="font-[family-name:var(--font-display)] text-lg text-[var(--color-tide)] group-hover:text-[var(--color-brass)] transition-colors duration-300">
           {room.name}
         </h3>
         <p className="text-sm text-[var(--color-ink)]/70 mt-1 line-clamp-2">

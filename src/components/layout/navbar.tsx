@@ -1,18 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    function handleScroll() {
+      // 40px threshold — small enough to trigger quickly, large enough
+      // that it doesn't flicker on/off from tiny scroll jitter right at
+      // the top of the page.
+      setScrolled(window.scrollY > 40);
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Run once on mount too, in case the page loads already scrolled down
+    // (e.g. browser restoring scroll position on refresh).
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="bg-[var(--color-foam)] sticky top-0 z-40">
-      <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+    <header
+      className={`bg-[var(--color-foam)] sticky top-0 z-40 transition-all duration-300 ${
+        scrolled ? "shadow-md" : "shadow-none"
+      }`}
+    >
+      <div
+        className={`max-w-6xl mx-auto px-6 flex items-center justify-between transition-all duration-300 ${
+          scrolled ? "py-3" : "py-5"
+        }`}
+      >
         <Link
           href="/"
-          className="font-[family-name:var(--font-display)] text-xl text-[var(--color-tide)]"
+          className={`font-[family-name:var(--font-display)] text-[var(--color-tide)] transition-all duration-300 ${
+            scrolled ? "text-lg" : "text-xl"
+          }`}
         >
           {siteConfig.name}
         </Link>
