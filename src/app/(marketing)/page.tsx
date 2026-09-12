@@ -11,7 +11,7 @@ export default async function HomePage() {
     <div>
       <section className="bg-[var(--color-tide)] text-[var(--color-foam)]">
         <div className="max-w-6xl mx-auto px-6 py-28 md:py-36">
-          <p className="text-[var(--color-brass)] text-sm mb-4">{siteConfig.contact.address}</p>
+          <p className="text-[var(--color-brass)] text-sm mb-4">{siteConfig.heroLocation}</p>
           <h1 className="font-[family-name:var(--font-display)] text-5xl md:text-6xl leading-[1.05] max-w-2xl">
             Slow mornings, ocean air, and nowhere to be.
           </h1>

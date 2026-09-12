@@ -2,6 +2,7 @@ export const siteConfig = {
   name: "Bayfront Resort",
   description:
     "A quiet beachfront resort with ocean-view suites, garden villas, and private bungalows.",
+  heroLocation: "Dipaculao, Aurora, Philippines",
   nav: [
     { label: "Rooms", href: "/rooms" },
     { label: "Amenities", href: "/amenities" },
