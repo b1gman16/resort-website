@@ -18,7 +18,7 @@ export default async function AmenitiesPage() {
   const amenities = await getAmenities();
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12">
+    <div className="max-w-6xl mx-auto px-6 py-12 animate-[content-fade-in_0.4s_ease-out]">
       <h1 className="text-3xl font-semibold text-slate-900 mb-2">Amenities</h1>
       <p className="text-slate-600 mb-10">Everything you need for a relaxed stay.</p>
 

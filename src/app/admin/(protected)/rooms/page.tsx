@@ -6,7 +6,7 @@ export default async function AdminRoomsPage() {
   const rooms = await getAllRoomsAdmin();
 
   return (
-    <div className="space-y-4">
+    <div className="max-w-6xl mx-auto px-6 py-12 animate-[content-fade-in_0.4s_ease-out]">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-slate-900">Rooms</h1>
         <Link

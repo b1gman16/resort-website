@@ -5,7 +5,7 @@ export default async function RoomsPage() {
   const rooms = await getRooms();
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
+    <div className="max-w-6xl mx-auto px-6 py-12 animate-[content-fade-in_0.4s_ease-out]">
       <h1 className="text-3xl font-semibold text-slate-900 mb-2">Our Rooms</h1>
       <p className="text-slate-600 mb-8">
         Find the space that fits your stay, from ocean-view suites to private villas.

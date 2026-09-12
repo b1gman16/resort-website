@@ -6,7 +6,7 @@ export default async function AdminBookingsPage() {
   const bookings = await getAllBookings();
 
   return (
-    <div className="space-y-4">
+    <div className="max-w-6xl mx-auto px-6 py-12 animate-[content-fade-in_0.4s_ease-out]">
       <h1 className="text-2xl font-semibold text-slate-900">Bookings</h1>
 
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">

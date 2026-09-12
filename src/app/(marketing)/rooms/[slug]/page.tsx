@@ -34,7 +34,7 @@ export default async function RoomDetailPage({ params }: Props) {
   const images = room.room_images.sort((a, b) => a.display_order - b.display_order);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
+    <div className="max-w-6xl mx-auto px-6 py-12 animate-[content-fade-in_0.4s_ease-out]">
       <Link href="/rooms" className="text-sm text-slate-500 hover:underline">
         ← Back to Rooms
       </Link>

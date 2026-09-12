@@ -6,7 +6,7 @@ export default async function AdminMessagesPage() {
   const unreadCount = messages.filter((m) => !m.read_at).length;
 
   return (
-    <div className="space-y-4">
+    <div className="max-w-6xl mx-auto px-6 py-12 animate-[content-fade-in_0.4s_ease-out]">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-slate-900">Messages</h1>
         {unreadCount > 0 && (
