@@ -1,70 +1,84 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Link } from "next-view-transitions";
 import { siteConfig } from "@/config/site";
+import { NavLink } from "@/components/ui/nav-link";
+import { MagneticWrap } from "@/components/magnetic-wrap";
 
 export function Navbar() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     function handleScroll() {
-      // 40px threshold — small enough to trigger quickly, large enough
-      // that it doesn't flicker on/off from tiny scroll jitter right at
-      // the top of the page.
       setScrolled(window.scrollY > 40);
     }
-
     window.addEventListener("scroll", handleScroll, { passive: true });
-    // Run once on mount too, in case the page loads already scrolled down
-    // (e.g. browser restoring scroll position on refresh).
     handleScroll();
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const transparent = isHome && !scrolled;
+
+  const leftLinks = siteConfig.nav.slice(0, 3);
+  const rightLinks = siteConfig.nav.slice(3);
+
   return (
     <header
-      className={`bg-[var(--color-foam)] sticky top-0 z-40 transition-all duration-300 ${
-        scrolled ? "shadow-md" : "shadow-none"
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+        transparent ? "bg-transparent" : "bg-[var(--color-foam)] shadow-md"
       }`}
     >
       <div
-        className={`max-w-6xl mx-auto px-6 flex items-center justify-between transition-all duration-300 ${
+        className={`max-w-6xl mx-auto px-6 grid grid-cols-[1fr_auto_1fr] items-center transition-all duration-300 ${
           scrolled ? "py-3" : "py-5"
-        }`}
+        } ${transparent ? "text-[var(--color-foam)]" : "text-[var(--color-tide)]"}`}
       >
+        <nav className="hidden md:flex items-center gap-6 text-sm justify-self-start">
+          {leftLinks.map((item) => (
+            <NavLink key={item.href} href={item.href}>
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
         <Link
           href="/"
-          className={`font-[family-name:var(--font-display)] text-[var(--color-tide)] transition-all duration-300 ${
-            scrolled ? "text-lg" : "text-xl"
-          }`}
+          className="font-[family-name:var(--font-display)] text-lg md:text-xl justify-self-center whitespace-nowrap"
         >
           {siteConfig.name}
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8 text-sm text-[var(--color-ink)]">
-          {siteConfig.nav.map((item) => (
-            <Link key={item.href} href={item.href} className="hover:text-[var(--color-tide)]">
+        <div className="hidden md:flex items-center gap-6 text-sm justify-self-end">
+          {rightLinks.map((item) => (
+            <NavLink key={item.href} href={item.href}>
               {item.label}
-            </Link>
+            </NavLink>
           ))}
-          <Link href="/manage" className="hover:text-[var(--color-tide)]">
-            Manage Booking
-          </Link>
-        </nav>
+          <NavLink href="/manage">Manage Booking</NavLink>
 
-        <Link
-          href="/rooms"
-          className="hidden md:block bg-[var(--color-tide)] text-[var(--color-foam)] text-sm px-5 py-2.5 rounded-sm hover:bg-[var(--color-ink)] transition-colors"
-        >
-          Book Now
-        </Link>
+          <MagneticWrap>
+            <Link
+              href="/rooms"
+              className={`inline-block px-5 py-2.5 rounded-sm text-sm font-medium backdrop-blur-md border transition-all ${
+                transparent
+                  ? "bg-[var(--color-foam)]/15 border-[var(--color-foam)]/30 text-[var(--color-foam)] hover:bg-[var(--color-foam)]/25"
+                  : "bg-[var(--color-tide)]/10 border-[var(--color-tide)]/20 text-[var(--color-tide)] hover:bg-[var(--color-tide)]/20"
+              }`}
+            >
+              Book Now
+            </Link>
+          </MagneticWrap>
+        </div>
 
         <button
           onClick={() => setMenuOpen((v) => !v)}
-          className="md:hidden text-[var(--color-tide)]"
+          className="md:hidden justify-self-end"
           aria-label="Toggle menu"
         >
           {menuOpen ? "✕" : "☰"}
@@ -72,7 +86,7 @@ export function Navbar() {
       </div>
 
       {menuOpen && (
-        <nav className="md:hidden px-6 py-4 flex flex-col gap-3 text-sm text-[var(--color-ink)] border-t border-[var(--color-sand)]">
+        <nav className="md:hidden bg-[var(--color-foam)] text-[var(--color-ink)] px-6 py-4 flex flex-col gap-3 text-sm border-t border-[var(--color-sand)]">
           {siteConfig.nav.map((item) => (
             <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
               {item.label}
