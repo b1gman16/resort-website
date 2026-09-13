@@ -1,10 +1,10 @@
 import Link from "next/link";
-import Image from "next/image";
 import { getRooms } from "@/lib/queries/rooms";
 import { RoomCard } from "@/components/rooms/room-card";
 import { siteConfig } from "@/config/site";
 import { Reveal } from "@/components/ui/reveal";
 import { HeroReveal } from "@/components/hero-reveal";
+import { ParallaxImage } from "@/components/parallax-image";
 
 export default async function HomePage() {
   const rooms = await getRooms();
@@ -12,23 +12,10 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero — now a full-bleed photo, not a flat color field.
-          relative + overflow-hidden gives the image, gradient, and
-          HeroReveal panel a shared coordinate space to stack in. */}
       <section className="relative overflow-hidden">
         <HeroReveal>
           <div className="relative min-h-[85vh] flex items-end">
-            <Image
-              src="/images/hero.jpg"
-              alt="Ocean view at the resort"
-              fill
-              priority // this is the largest, first-visible image — load it eagerly, not lazily
-              className="object-cover"
-            />
-            {/* Gradient overlay: transparent at the top (lets the photo
-                breathe), solid Tide at the bottom (keeps the headline
-                legible against a busy photo, and gives the section a
-                color to hand off to the next one below). */}
+            <ParallaxImage src="/images/hero.jpg" alt="Ocean view at the resort" />
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-tide)] via-[var(--color-tide)]/40 to-transparent" />
 
             <div className="relative max-w-6xl mx-auto px-6 pb-32 md:pb-40 pt-40 text-[var(--color-foam)] w-full">
@@ -48,11 +35,6 @@ export default async function HomePage() {
         </HeroReveal>
       </section>
 
-      {/* Featured rooms — pulled up with a negative margin so the card
-          grid's top edge overlaps the hero's bottom edge by ~96px.
-          relative z-10 lifts these cards visually above/in front of that
-          seam. shadow-lg (not just the existing hover shadow) makes the
-          overlap read clearly even before anyone hovers anything. */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 -mt-24 pb-20">
         <Reveal>
           <div className="bg-[var(--color-foam)] rounded-lg shadow-xl p-8 md:p-12">
