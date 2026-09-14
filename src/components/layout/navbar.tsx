@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Link } from "next-view-transitions";
 import { siteConfig } from "@/config/site";
+import { FULL_BLEED_HERO_PATHS } from "@/config/hero-paths";
 import { NavLink } from "@/components/ui/nav-link";
 import { MagneticWrap } from "@/components/magnetic-wrap";
 
 export function Navbar() {
   const pathname = usePathname();
-  const isHome = pathname === "/";
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -23,7 +23,7 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const transparent = isHome && !scrolled;
+  const transparent = FULL_BLEED_HERO_PATHS.includes(pathname) && !scrolled;
 
   const leftLinks = siteConfig.nav.slice(0, 3);
   const rightLinks = siteConfig.nav.slice(3);

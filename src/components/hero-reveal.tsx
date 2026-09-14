@@ -3,22 +3,25 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 
-export function HeroReveal({ children }: { children: React.ReactNode }) {
-  // Defaults to `true` (panel shown) on every render, matching what the
-  // server rendered — this avoids a hydration mismatch. The check below
-  // then flips it off, without animating, for anyone who's already seen
-  // it this session.
+export function HeroReveal({
+  children,
+  storageKey = "home",
+}: {
+  children: React.ReactNode;
+  storageKey?: string;
+}) {
   const [showPanel, setShowPanel] = useState(true);
   const [skip, setSkip] = useState(false);
 
   useEffect(() => {
-    const seen = sessionStorage.getItem("hero-reveal-seen");
+    const key = `hero-reveal-seen-${storageKey}`;
+    const seen = sessionStorage.getItem(key);
     if (seen) {
-      setSkip(true); // instantly render as already-revealed, no animation
+      setSkip(true);
     } else {
-      sessionStorage.setItem("hero-reveal-seen", "true");
+      sessionStorage.setItem(key, "true");
     }
-  }, []);
+  }, [storageKey]);
 
   return (
     <div className="relative overflow-hidden">

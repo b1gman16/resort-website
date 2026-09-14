@@ -1,24 +1,37 @@
 import { getRooms } from "@/lib/queries/rooms";
-import { RoomCard } from "@/components/rooms/room-card";
+import { RoomStorySection } from "@/components/rooms/room-story-section";
+import { ParallaxImage } from "@/components/parallax-image";
+import { HeroReveal } from "@/components/hero-reveal";
 
 export default async function RoomsPage() {
   const rooms = await getRooms();
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12 animate-[content-fade-in_0.4s_ease-out]">
-      <h1 className="text-3xl font-semibold text-slate-900 mb-2">Our Rooms</h1>
-      <p className="text-slate-600 mb-8">
-        Find the space that fits your stay, from ocean-view suites to private villas.
-      </p>
+    <div>
+      <section className="relative overflow-hidden">
+        <HeroReveal storageKey="rooms">
+          <div className="relative min-h-[70vh] flex items-end">
+            <ParallaxImage src="/images/rooms-hero.jpg" alt="Rooms at the resort" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-tide)] via-[var(--color-tide)]/30 to-transparent" />
+
+            <div className="relative max-w-6xl mx-auto px-6 pb-20 text-[var(--color-foam)] w-full">
+              <p className="text-[var(--color-brass)] text-sm mb-4">
+                {rooms.length} room{rooms.length !== 1 ? "s" : ""} to choose from
+              </p>
+              <h1 className="font-[family-name:var(--font-display)] text-5xl md:text-6xl leading-[1.05] max-w-2xl">
+                Every room has its own way of facing the water.
+              </h1>
+            </div>
+          </div>
+        </HeroReveal>
+      </section>
 
       {rooms.length === 0 ? (
-        <p className="text-slate-500">No rooms available right now. Check back soon.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {rooms.map((room) => (
-            <RoomCard key={room.id} room={room} />
-          ))}
+        <div className="max-w-6xl mx-auto px-6 py-20 text-center text-[var(--color-ink)]/60">
+          No rooms available right now. Check back soon.
         </div>
+      ) : (
+        rooms.map((room, i) => <RoomStorySection key={room.id} room={room} index={i} />)
       )}
     </div>
   );
