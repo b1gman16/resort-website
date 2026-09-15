@@ -1,19 +1,33 @@
 import Link from "next/link";
 import { getRooms } from "@/lib/queries/rooms";
-import { RoomCard } from "@/components/rooms/room-card";
+import { getAmenities } from "@/lib/queries/amenities";
+import { getGalleryImages } from "@/lib/queries/gallery";
+import { getRoomImageUrl } from "@/lib/utils/storage";
 import { siteConfig } from "@/config/site";
 import { Reveal } from "@/components/ui/reveal";
 import { HeroReveal } from "@/components/hero-reveal";
+import { StorySection } from "@/components/story-section";
+import { AmenitiesVisual } from "@/components/amenities-visual";
+import { GalleryMosaicTeaser } from "@/components/gallery-mosaic-teaser";
 import { ParallaxImage } from "@/components/parallax-image";
 
 export default async function HomePage() {
-  const rooms = await getRooms();
-  const featuredRooms = rooms.slice(0, 3);
+  const [rooms, amenities, galleryImages] = await Promise.all([
+    getRooms(),
+    getAmenities(),
+    getGalleryImages(),
+  ]);
+
+  const featuredRoom = rooms[0];
+  const featuredRoomImage = featuredRoom?.room_images[0]
+    ? getRoomImageUrl(featuredRoom.room_images[0].storage_path)
+    : null;
 
   return (
     <div>
+      {/* Hero — back to a single parallax image, no slideshow */}
       <section className="relative overflow-hidden">
-        <HeroReveal>
+        <HeroReveal storageKey="home">
           <div className="relative min-h-[85vh] flex items-end">
             <ParallaxImage src="/images/hero.jpg" alt="Ocean view at the resort" />
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-tide)] via-[var(--color-tide)]/40 to-transparent" />
@@ -35,50 +49,74 @@ export default async function HomePage() {
         </HeroReveal>
       </section>
 
-      <section className="relative z-10 max-w-6xl mx-auto px-6 -mt-24 pb-20">
+      {/* Editorial statement */}
+      <section className="max-w-4xl mx-auto px-6 py-28 md:py-36 text-center">
         <Reveal>
-          <div className="bg-[var(--color-foam)] rounded-lg shadow-xl p-8 md:p-12">
-            <div className="flex items-end justify-between mb-10">
-              <h2 className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-tide)]">
-                Where to stay
-              </h2>
-              <Link href="/rooms" className="text-sm text-[var(--color-tide)] hover:underline">
-                View all
-              </Link>
-            </div>
-
-            {featuredRooms.length === 0 ? (
-              <p className="text-[var(--color-ink)]/60">Rooms coming soon.</p>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-                {featuredRooms.map((room, i) => (
-                  <Reveal key={room.id} delay={i * 0.1}>
-                    <RoomCard room={room} />
-                  </Reveal>
-                ))}
-              </div>
-            )}
-          </div>
+          <p className="font-[family-name:var(--font-display)] text-3xl md:text-4xl text-[var(--color-tide)] leading-snug">
+            {siteConfig.name} is built around one idea — that a resort should feel like an
+            extension of the water it sits beside, not a building dropped onto it.
+          </p>
         </Reveal>
       </section>
 
-      <section className="bg-[var(--color-sand)] py-20">
-        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
-          {[
-            { title: "Beachfront, every room", body: "No room here is more than a two-minute walk from the water." },
-            { title: "Book now, pay later", body: "Reserve online, settle the bill when you arrive." },
-            { title: "Change your mind anytime", body: "Manage or cancel your booking yourself, no calls needed." },
-          ].map((item, i) => (
-            <Reveal key={item.title} delay={i * 0.1}>
-              <div>
-                <p className="font-[family-name:var(--font-display)] text-xl text-[var(--color-tide)]">
-                  {item.title}
-                </p>
-                <p className="text-sm text-[var(--color-ink)]/70 mt-2">{item.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+      {/* Accommodations teaser */}
+      <StorySection
+        eyebrow="Accommodations"
+        title="Where to stay"
+        body="From ocean-view suites to private garden villas, every room opens toward the water in its own way."
+        ctaLabel="Explore Rooms"
+        ctaHref="/rooms"
+        visual={
+          featuredRoomImage ? (
+            <ParallaxImage src={featuredRoomImage} alt={featuredRoom?.name ?? "A room at the resort"} />
+          ) : (
+            <div className="w-full h-full bg-[var(--color-sand)] flex items-center justify-center text-[var(--color-ink)]/40 text-sm">
+              Photos coming soon
+            </div>
+          )
+        }
+      />
+
+      {/* Amenities teaser */}
+      <StorySection
+        eyebrow="On the property"
+        title="Everything within reach"
+        body="A pool that never feels crowded, a kitchen that follows the season, and quiet corners for doing nothing at all."
+        ctaLabel="See Amenities"
+        ctaHref="/amenities"
+        reversed
+        tint="sand"
+        visual={<AmenitiesVisual amenities={amenities} />}
+      />
+
+      {/* Gallery mosaic teaser */}
+      <GalleryMosaicTeaser images={galleryImages} />
+
+      {/* Closing CTA */}
+      <section className="relative py-28 md:py-36 bg-gradient-to-br from-[var(--color-tide)] to-[var(--color-ink)] text-[var(--color-foam)] text-center">
+        <Reveal>
+          <div className="max-w-2xl mx-auto px-6">
+            <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl leading-tight">
+              Ready for slower days?
+            </h2>
+            <p className="mt-4 opacity-80">
+              Pick a room, choose your dates. No payment until you arrive.
+            </p>
+            <div className="mt-6 flex items-center justify-center gap-3 text-xs opacity-70">
+              <span>Beachfront</span>
+              <span>·</span>
+              <span>Pay at the resort</span>
+              <span>·</span>
+              <span>Free cancellation</span>
+            </div>
+            <Link
+              href="/rooms"
+              className="inline-block mt-8 bg-[var(--color-foam)] text-[var(--color-tide)] px-7 py-3.5 rounded-sm font-medium hover:bg-[var(--color-sand)] transition-colors"
+            >
+              Browse Rooms
+            </Link>
+          </div>
+        </Reveal>
       </section>
     </div>
   );
