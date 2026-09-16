@@ -10,6 +10,7 @@ import { StorySection } from "@/components/story-section";
 import { AmenitiesVisual } from "@/components/amenities-visual";
 import { GalleryMosaicTeaser } from "@/components/gallery-mosaic-teaser";
 import { ParallaxImage } from "@/components/parallax-image";
+import { CursorTiltImage } from "@/components/cursor-tilt-image";
 
 export default async function HomePage() {
   const [rooms, amenities, galleryImages] = await Promise.all([
@@ -25,12 +26,11 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero — back to a single parallax image, no slideshow */}
       <section className="relative overflow-hidden">
         <HeroReveal storageKey="home">
           <div className="relative min-h-[85vh] flex items-end">
-            <ParallaxImage src="/images/hero.jpg" alt="Ocean view at the resort" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-tide)] via-[var(--color-tide)]/40 to-transparent" />
+            <CursorTiltImage src="/images/hero.jpg" alt="Ocean view at the resort" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-tide)] via-[var(--color-tide)]/40 to-transparent pointer-events-none" />
 
             <div className="relative max-w-6xl mx-auto px-6 pb-32 md:pb-40 pt-40 text-[var(--color-foam)] w-full">
               <p className="text-[var(--color-brass)] text-sm mb-4">{siteConfig.heroLocation}</p>
@@ -49,7 +49,6 @@ export default async function HomePage() {
         </HeroReveal>
       </section>
 
-      {/* Editorial statement */}
       <section className="max-w-4xl mx-auto px-6 py-28 md:py-36 text-center">
         <Reveal>
           <p className="font-[family-name:var(--font-display)] text-3xl md:text-4xl text-[var(--color-tide)] leading-snug">
@@ -59,7 +58,6 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      {/* Accommodations teaser */}
       <StorySection
         eyebrow="Accommodations"
         title="Where to stay"
@@ -77,7 +75,6 @@ export default async function HomePage() {
         }
       />
 
-      {/* Amenities teaser */}
       <StorySection
         eyebrow="On the property"
         title="Everything within reach"
@@ -89,10 +86,8 @@ export default async function HomePage() {
         visual={<AmenitiesVisual amenities={amenities} />}
       />
 
-      {/* Gallery mosaic teaser */}
       <GalleryMosaicTeaser images={galleryImages} />
 
-      {/* Closing CTA */}
       <section className="relative py-28 md:py-36 bg-gradient-to-br from-[var(--color-tide)] to-[var(--color-ink)] text-[var(--color-foam)] text-center">
         <Reveal>
           <div className="max-w-2xl mx-auto px-6">
