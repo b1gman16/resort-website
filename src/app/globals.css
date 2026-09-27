@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --color-tide: #0e3b3c;
-  --color-foam: #f7f5ef;
-  --color-sand: #e8dfc9;
+  --color-tide: #1b4b6b;
+  --color-foam: #f7fafc;
+  --color-sand: #dceaf5;
   --color-brass: #c9932b;
-  --color-ink: #1a2422;
+  --color-ink: #10253a;
 }
 
 ::view-transition-old(root) {
