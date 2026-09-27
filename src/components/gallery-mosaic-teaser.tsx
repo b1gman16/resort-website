@@ -16,7 +16,7 @@ export function GalleryMosaicTeaser({ images }: { images: GalleryImage[] }) {
   const shown = images.slice(0, LAYOUT.length);
 
   return (
-    <section className="py-24 md:py-32 bg-[var(--color-sand)] overflow-hidden">
+    <section className="py-24 md:py-32 bg-[var(--color-foam)] overflow-hidden">
       <div className="max-w-6xl mx-auto px-6">
         <Reveal once>
           <div className="flex items-end justify-between mb-14">

@@ -8,6 +8,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { HeroReveal } from "@/components/hero-reveal";
 import { StorySection } from "@/components/story-section";
 import { AmenitiesVisual } from "@/components/amenities-visual";
+import { EventsVisual } from "@/components/events-visual";
 import { GalleryMosaicTeaser } from "@/components/gallery-mosaic-teaser";
 import { ParallaxImage } from "@/components/parallax-image";
 import { CursorTiltImage } from "@/components/cursor-tilt-image";
@@ -26,6 +27,7 @@ export default async function HomePage() {
 
   return (
     <div>
+      {/* Hero */}
       <section className="relative overflow-hidden">
         <HeroReveal storageKey="home">
           <div className="relative min-h-[85vh] flex items-end">
@@ -49,6 +51,7 @@ export default async function HomePage() {
         </HeroReveal>
       </section>
 
+      {/* Editorial statement */}
       <section className="max-w-4xl mx-auto px-6 py-28 md:py-36 text-center">
         <Reveal>
           <p className="font-[family-name:var(--font-display)] text-3xl md:text-4xl text-[var(--color-tide)] leading-snug">
@@ -58,23 +61,52 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
+      {/* 1. POOL — photo left, no CTA page exists for this specifically,
+          so it points to Amenities where the pool is listed alongside
+          everything else. */}
+      <StorySection
+        eyebrow="The centerpiece"
+        title="An infinity pool that never feels crowded"
+        body="Open from sunrise to sunset, facing the water, with a swim-up shade deck for the middle of the day."
+        ctaLabel="See Amenities"
+        ctaHref="/amenities"
+        tint="foam"
+        visual={<ParallaxImage src="/images/pool.jpg" alt="Infinity pool overlooking the ocean" />}
+      />
+
+      {/* 2. ROOMS — photo right */}
       <StorySection
         eyebrow="Accommodations"
         title="Where to stay"
         body="From ocean-view suites to private garden villas, every room opens toward the water in its own way."
         ctaLabel="Explore Rooms"
         ctaHref="/rooms"
+        reversed
+        tint="sand"
         visual={
           featuredRoomImage ? (
             <ParallaxImage src={featuredRoomImage} alt={featuredRoom?.name ?? "A room at the resort"} />
           ) : (
-            <div className="w-full h-full bg-[var(--color-sand)] flex items-center justify-center text-[var(--color-ink)]/40 text-sm">
+            <div className="w-full h-full bg-[var(--color-tide)] flex items-center justify-center text-[var(--color-foam)]/40 text-sm">
               Photos coming soon
             </div>
           )
         }
       />
 
+      {/* 3. EVENTS — panel left, no dedicated page built yet, so this
+          points guests to Contact to inquire directly. */}
+      <StorySection
+        eyebrow="Celebrate here"
+        title="A setting for the occasions that matter"
+        body="From beachside ceremonies to milestone dinners, our team helps shape the day around the resort's own rhythm."
+        ctaLabel="Inquire About Events"
+        ctaHref="/contact"
+        tint="foam"
+        visual={<EventsVisual />}
+      />
+
+      {/* 4. AMENITIES — panel right */}
       <StorySection
         eyebrow="On the property"
         title="Everything within reach"
@@ -86,8 +118,10 @@ export default async function HomePage() {
         visual={<AmenitiesVisual amenities={amenities} />}
       />
 
+      {/* 5. VIEWS AROUND THE RESORT — the gallery collage */}
       <GalleryMosaicTeaser images={galleryImages} />
 
+      {/* Closing CTA */}
       <section className="relative py-28 md:py-36 bg-gradient-to-br from-[var(--color-tide)] to-[var(--color-ink)] text-[var(--color-foam)] text-center">
         <Reveal>
           <div className="max-w-2xl mx-auto px-6">
