@@ -12,6 +12,13 @@ import { EventsVisual } from "@/components/events-visual";
 import { GalleryMosaicTeaser } from "@/components/gallery-mosaic-teaser";
 import { ParallaxImage } from "@/components/parallax-image";
 import { CursorTiltImage } from "@/components/cursor-tilt-image";
+import { PoolSlideshow } from "@/components/pool-slideshow";
+
+const POOL_SLIDES = [
+  { src: "/images/pool.jpg", alt: "Infinity pool overlooking the ocean" },
+  { src: "/images/pool-2.jpg", alt: "The pool at golden hour" },
+  { src: "/images/pool-3.jpg", alt: "Loungers beside the pool" },
+];
 
 export default async function HomePage() {
   const [rooms, amenities, galleryImages] = await Promise.all([
@@ -61,20 +68,15 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      {/* 1. POOL — photo left, no CTA page exists for this specifically,
-          so it points to Amenities where the pool is listed alongside
-          everything else. */}
-      <StorySection
+      {/* 1. POOL — full-screen slideshow, no button */}
+      <PoolSlideshow
+        slides={POOL_SLIDES}
         eyebrow="The centerpiece"
         title="An infinity pool that never feels crowded"
         body="Open from sunrise to sunset, facing the water, with a swim-up shade deck for the middle of the day."
-        ctaLabel="See Amenities"
-        ctaHref="/amenities"
-        tint="foam"
-        visual={<ParallaxImage src="/images/pool.jpg" alt="Infinity pool overlooking the ocean" />}
       />
 
-      {/* 2. ROOMS — photo right */}
+      {/* 2. ROOMS */}
       <StorySection
         eyebrow="Accommodations"
         title="Where to stay"
@@ -94,8 +96,7 @@ export default async function HomePage() {
         }
       />
 
-      {/* 3. EVENTS — panel left, no dedicated page built yet, so this
-          points guests to Contact to inquire directly. */}
+      {/* 3. EVENTS */}
       <StorySection
         eyebrow="Celebrate here"
         title="A setting for the occasions that matter"
@@ -106,7 +107,7 @@ export default async function HomePage() {
         visual={<EventsVisual />}
       />
 
-      {/* 4. AMENITIES — panel right */}
+      {/* 4. AMENITIES */}
       <StorySection
         eyebrow="On the property"
         title="Everything within reach"
@@ -118,7 +119,7 @@ export default async function HomePage() {
         visual={<AmenitiesVisual amenities={amenities} />}
       />
 
-      {/* 5. VIEWS AROUND THE RESORT — the gallery collage */}
+      {/* 5. VIEWS AROUND THE RESORT */}
       <GalleryMosaicTeaser images={galleryImages} />
 
       {/* Closing CTA */}
