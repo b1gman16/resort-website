@@ -30,6 +30,7 @@ export async function createRoom(input: RoomInput): Promise<RoomActionResult> {
       base_price: parsed.data.basePrice,
       capacity: parsed.data.capacity,
       total_units: parsed.data.totalUnits,
+      accommodation_type: parsed.data.accommodationType,
     })
     .select("id")
     .single();
@@ -48,6 +49,7 @@ export async function createRoom(input: RoomInput): Promise<RoomActionResult> {
 
   revalidatePath("/admin/rooms");
   revalidatePath("/rooms");
+  revalidatePath("/cottages");
   redirect(`/admin/rooms/${data.id}/edit`);
 }
 
@@ -72,6 +74,7 @@ export async function updateRoom(roomId: string, input: RoomInput): Promise<Room
       base_price: parsed.data.basePrice,
       capacity: parsed.data.capacity,
       total_units: parsed.data.totalUnits,
+      accommodation_type: parsed.data.accommodationType,
     })
     .eq("id", roomId);
 
@@ -89,6 +92,7 @@ export async function updateRoom(roomId: string, input: RoomInput): Promise<Room
 
   revalidatePath("/admin/rooms");
   revalidatePath("/rooms");
+  revalidatePath("/cottages");
   revalidatePath(`/rooms/${parsed.data.slug}`);
   redirect("/admin/rooms");
 }
@@ -111,5 +115,6 @@ export async function toggleRoomActive(
 
   revalidatePath("/admin/rooms");
   revalidatePath("/rooms");
+  revalidatePath("/cottages");
   return { success: true };
 }

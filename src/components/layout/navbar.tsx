@@ -6,6 +6,7 @@ import { Link } from "next-view-transitions";
 import { siteConfig } from "@/config/site";
 import { FULL_BLEED_HERO_PATHS } from "@/config/hero-paths";
 import { NavLink } from "@/components/ui/nav-link";
+import { NavDropdown } from "@/components/ui/nav-dropdown";
 import { MagneticWrap } from "@/components/magnetic-wrap";
 
 export function Navbar() {
@@ -25,9 +26,6 @@ export function Navbar() {
 
   const transparent = FULL_BLEED_HERO_PATHS.includes(pathname) && !scrolled;
 
-  const leftLinks = siteConfig.nav.slice(0, 3);
-  const rightLinks = siteConfig.nav.slice(3);
-
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
@@ -40,11 +38,15 @@ export function Navbar() {
         } ${transparent ? "text-[var(--color-foam)]" : "text-[var(--color-tide)]"}`}
       >
         <nav className="hidden md:flex items-center gap-6 text-sm justify-self-start">
-          {leftLinks.map((item) => (
-            <NavLink key={item.href} href={item.href}>
-              {item.label}
-            </NavLink>
-          ))}
+          <NavDropdown
+            label="Accommodations"
+            items={[
+              { label: "Rooms", href: "/rooms" },
+              { label: "Cottages", href: "/cottages" },
+            ]}
+          />
+          <NavLink href="/amenities">Amenities</NavLink>
+          <NavLink href="/gallery">Gallery</NavLink>
         </nav>
 
         <Link
@@ -55,11 +57,8 @@ export function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-6 text-sm justify-self-end">
-          {rightLinks.map((item) => (
-            <NavLink key={item.href} href={item.href}>
-              {item.label}
-            </NavLink>
-          ))}
+          <NavLink href="/about">About</NavLink>
+          <NavLink href="/contact">Contact</NavLink>
           <NavLink href="/manage">Manage Booking</NavLink>
 
           <MagneticWrap>

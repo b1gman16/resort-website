@@ -6,7 +6,7 @@ export default async function AdminRoomsPage() {
   const rooms = await getAllRoomsAdmin();
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12 animate-[content-fade-in_0.4s_ease-out]">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-slate-900">Rooms</h1>
         <Link
@@ -22,6 +22,7 @@ export default async function AdminRoomsPage() {
           <thead className="bg-slate-100 text-slate-600 text-left">
             <tr>
               <th className="px-4 py-2">Name</th>
+              <th className="px-4 py-2">Type</th>
               <th className="px-4 py-2">Price / Night</th>
               <th className="px-4 py-2">Capacity</th>
               <th className="px-4 py-2">Status</th>
@@ -32,6 +33,9 @@ export default async function AdminRoomsPage() {
             {rooms.map((room) => (
               <tr key={room.id} className="border-t">
                 <td className="px-4 py-3">{room.name}</td>
+                <td className="px-4 py-3 capitalize text-slate-500">
+                  {room.accommodation_type}
+                </td>
                 <td className="px-4 py-3">₱{room.base_price.toLocaleString()}</td>
                 <td className="px-4 py-3">{room.capacity}</td>
                 <td className="px-4 py-3">

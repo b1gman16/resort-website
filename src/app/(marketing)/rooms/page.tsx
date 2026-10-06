@@ -4,7 +4,7 @@ import { ParallaxImage } from "@/components/parallax-image";
 import { HeroReveal } from "@/components/hero-reveal";
 
 export default async function RoomsPage() {
-  const rooms = await getRooms();
+  const rooms = await getRooms("room"); // CHANGED — was getRooms()
 
   return (
     <div>

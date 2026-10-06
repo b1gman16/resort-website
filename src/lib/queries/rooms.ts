@@ -12,19 +12,24 @@ export type RoomWithImages = Room & {
 // Fetches all rooms for the public rooms listing page.
 // Ordered by base_price so cheaper rooms show first — a reasonable default
 // for a marketing page; can add sort options later without changing this fn's shape.
-export async function getRooms(): Promise<RoomWithImages[]> {
+export async function getRooms(
+  type?: "room" | "cottage"
+): Promise<RoomWithImages[]> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("rooms")
     .select("*, room_images(*)")
     .eq("is_active", true)
     .order("base_price", { ascending: true });
 
+  if (type) {
+    query = query.eq("accommodation_type", type);
+  }
+
+  const { data, error } = await query;
+
   if (error) {
-    // Thrown, not swallowed — Next.js will surface this to the nearest
-    // error.tsx boundary. Silently returning [] would make an outage look
-    // like "we just have no rooms," which is misleading to a real visitor.
     throw new Error(`Failed to fetch rooms: ${error.message}`);
   }
 

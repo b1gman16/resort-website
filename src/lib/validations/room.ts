@@ -11,6 +11,7 @@ export const roomSchema = z.object({
   basePrice: z.coerce.number().positive("Price must be greater than 0"),
   capacity: z.coerce.number().int().positive("Capacity must be at least 1"),
   totalUnits: z.coerce.number().int().positive("Must have at least 1 unit"),
+  accommodationType: z.enum(["room", "cottage"]),
 });
 
 export type RoomInput = z.infer<typeof roomSchema>;

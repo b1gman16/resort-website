@@ -5,6 +5,7 @@ export const siteConfig = {
   heroLocation: "Dipaculao, Aurora, Philippines",
   nav: [
     { label: "Rooms", href: "/rooms" },
+    { label: "Cottages", href: "/cottages" },
     { label: "Amenities", href: "/amenities" },
     { label: "Gallery", href: "/gallery" },
     { label: "About", href: "/about" },

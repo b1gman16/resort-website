@@ -27,6 +27,7 @@ export function RoomForm({
       basePrice: formData.get("basePrice"),
       capacity: formData.get("capacity"),
       totalUnits: formData.get("totalUnits"),
+      accommodationType: formData.get("accommodationType"),
     };
 
     const parsed = roomSchema.safeParse(raw);
@@ -37,8 +38,6 @@ export function RoomForm({
 
     startTransition(async () => {
       const result = await onSubmit(parsed.data);
-      // On success, onSubmit redirects server-side (see Step 5) — this
-      // component only ever needs to handle the failure case.
       if (!result.success) {
         setFormError(result.error);
         if (result.fieldErrors) setFieldErrors(result.fieldErrors);
@@ -52,7 +51,18 @@ export function RoomForm({
         <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded">{formError}</p>
       )}
 
-      <Field label="Room Name" error={fieldErrors.name}>
+      <Field label="Accommodation Type" error={fieldErrors.accommodationType}>
+        <select
+          name="accommodationType"
+          defaultValue={initialRoom?.accommodation_type ?? "room"}
+          className="w-full border rounded px-3 py-2 text-sm bg-white"
+        >
+          <option value="room">Room</option>
+          <option value="cottage">Cottage</option>
+        </select>
+      </Field>
+
+      <Field label="Name" error={fieldErrors.name}>
         <input
           name="name"
           defaultValue={initialRoom?.name}
@@ -65,7 +75,7 @@ export function RoomForm({
         <input
           name="slug"
           defaultValue={initialRoom?.slug}
-          placeholder="ocean-view-suite"
+          placeholder="driftwood-cottage"
           required
           className="w-full border rounded px-3 py-2 text-sm font-mono"
         />
